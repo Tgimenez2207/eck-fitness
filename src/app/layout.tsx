@@ -16,10 +16,21 @@ const anton = Anton({
   display: "swap",
 })
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.URL /* Netlify */) ??
+  "https://eck-fitness-prode.netlify.app"
+
 export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
   title: "ECK FITNESS · Prode Mundial 2026",
   description: "Sumate al prode del Mundial 2026 de ECK FITNESS. Ganá premios prediciendo los resultados.",
   applicationName: "ECK FITNESS Prode",
+  openGraph: {
+    type: "website",
+    locale: "es_AR",
+    siteName: "ECK Fitness Prode",
+  },
 }
 
 export const viewport: Viewport = {
