@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ECK FITNESS · Prode Mundial 2026
 
-## Getting Started
+Web del gym ECK FITNESS para el prode del Mundial. Inspirada en el módulo de prode de Newbery Athletic Club.
 
-First, run the development server:
+## Stack
+- **Next.js 16** (App Router) + TypeScript
+- **Tailwind CSS v4** + shadcn-style components
+- **Supabase** (auth + Postgres) — opcional, hay modo demo sin backend
+- **Sonner** para toasts, **lucide-react** para iconos
 
+## Cómo se juega
+- **3 puntos** si pegás el resultado exacto.
+- **1 punto** si acertás el ganador (o empate).
+- **0 puntos** si te equivocás.
+
+## Rutas
+- `/` — landing institucional con CTA al prode.
+- `/demo` — versión sin Supabase. Tus pronósticos se guardan en `localStorage`. Sirve para que cualquiera vea cómo funciona sin setup.
+- `/prode` — versión real con Supabase. Requiere login.
+- `/auth/login`, `/auth/register` — auth con email/contraseña.
+- `/auth/forgot-password` — pide email y manda link de recovery.
+- `/auth/reset-password` — destino del link; seteás la nueva contraseña.
+- `/admin/prode` — alta de partidos, cierre, carga de resultados y leaderboard. Solo para usuarios con `role = 'admin'`.
+
+## Branding meta (auto)
+- `src/app/icon.tsx` + `apple-icon.tsx` — favicon 512×512 y Apple icon 180×180 generados con `next/og`.
+- `src/app/opengraph-image.tsx` + `twitter-image.tsx` — preview 1200×630 para WhatsApp / IG / Twitter cuando comparten el link.
+
+## Auto-cierre de pronósticos
+La UI cierra el partido apenas suena la hora (`isMatchClosed` en `lib/prode-utils.ts` + tick cada 30s con `useNow`). El backend rechaza inserts/updates tardíos vía RLS (`m.is_closed = false and m.match_date > now()`). `is_closed` queda como override manual del admin si hay que cerrar antes.
+
+## Run local
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Levanta en **http://localhost:8117**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Si no configurás Supabase, todas las rutas de auth/prode redirigen a `/demo` automáticamente.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup Supabase (opcional)
+1. Creá un proyecto en [supabase.com](https://supabase.com/).
+2. Copiá las credenciales a `.env.local`:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+   ```
+3. Corré el `supabase/schema.sql` en el SQL editor — crea las tablas (`profiles`, `prode_matches`, `prode_predictions`), policies de RLS, el trigger de `handle_new_user` y seed con los partidos de grupos del Mundial 2026.
+4. Para hacer admin a un usuario después de registrarse:
+   ```sql
+   update public.profiles set role = 'admin' where email = 'tu@email.com';
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Carpeta clave
+```
+src/
+├── app/
+│   ├── page.tsx              ← landing
+│   ├── demo/                 ← prode sin backend (localStorage)
+│   ├── prode/                ← prode con Supabase
+│   ├── admin/prode/          ← panel admin
+│   └── auth/                 ← login + register + signout
+├── components/
+│   ├── ProdeBoard.tsx        ← UI compartida entre demo y real
+│   ├── MatchCard.tsx
+│   ├── Navbar.tsx
+│   └── EckLogo.tsx
+├── lib/
+│   ├── supabase/             ← clients server + browser
+│   ├── prode-utils.ts        ← calcPoints, PHASES, FLAGS
+│   ├── mock-data.ts          ← partidos seed para /demo
+│   └── env.ts                ← detecta si Supabase está configurado
+└── types/database.ts         ← tipos Profile, ProdeMatch, ProdePrediction
+```

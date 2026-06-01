@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+
+[build.environment]
+  # NEXT_PUBLIC_* son públicas por diseño (Next.js las inyecta en el bundle del cliente;
+  # la anon key de Supabase está protegida por RLS). Las server-only viven en los bundles
+  # de las funciones serverless. El secret scanner de Netlify da falsos positivos para
+  # ambos casos, así que las omitimos explícitamente.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY"

@@ -1,26 +1,217 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --font-heading: var(--font-anton);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ECK FITNESS — Dark sport theme, azul eléctrico primary */
+:root {
+  /* Modo oscuro por default — sport premium */
+  --background: oklch(0.13 0.02 245);          /* navy oscuro casi negro */
+  --foreground: oklch(0.98 0.005 240);         /* off-white */
+  --card: oklch(0.17 0.025 248);                /* navy card */
+  --card-foreground: oklch(0.98 0.005 240);
+  --popover: oklch(0.17 0.025 248);
+  --popover-foreground: oklch(0.98 0.005 240);
+  /* Azul eléctrico ECK — color identidad */
+  --primary: oklch(0.62 0.22 252);              /* azul vibrante */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.22 0.025 248);
+  --secondary-foreground: oklch(0.96 0.005 240);
+  --muted: oklch(0.22 0.025 248);
+  --muted-foreground: oklch(0.68 0.025 250);
+  --accent: oklch(0.74 0.18 220);               /* cyan eléctrico accent */
+  --accent-foreground: oklch(0.13 0.02 245);
+  --destructive: oklch(0.65 0.24 25);
+  --border: oklch(0.26 0.02 248);
+  --input: oklch(0.22 0.025 248);
+  --ring: oklch(0.62 0.22 252);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: oklch(0.13 0.02 245);
+  --foreground: oklch(0.98 0.005 240);
+  --card: oklch(0.17 0.025 248);
+  --card-foreground: oklch(0.98 0.005 240);
+  --popover: oklch(0.17 0.025 248);
+  --popover-foreground: oklch(0.98 0.005 240);
+  --primary: oklch(0.62 0.22 252);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.22 0.025 248);
+  --secondary-foreground: oklch(0.96 0.005 240);
+  --muted: oklch(0.22 0.025 248);
+  --muted-foreground: oklch(0.68 0.025 250);
+  --accent: oklch(0.74 0.18 220);
+  --accent-foreground: oklch(0.13 0.02 245);
+  --destructive: oklch(0.65 0.24 25);
+  --border: oklch(0.26 0.02 248);
+  --input: oklch(0.22 0.025 248);
+  --ring: oklch(0.62 0.22 252);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  html {
+    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-anton), "Bebas Neue", Impact, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-anton), "Bebas Neue", Impact, sans-serif;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  /* Sombras sport — glow azul eléctrico */
+  .shadow-glow-blue {
+    box-shadow: 0 0 0 1px oklch(0.62 0.22 252 / 0.3), 0 8px 30px -8px oklch(0.62 0.22 252 / 0.45);
+  }
+  .shadow-card {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  }
+  .shadow-lift {
+    box-shadow: 0 12px 36px -12px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Fondo mesh — glow azul radial sutil */
+  .gradient-mesh {
+    background:
+      radial-gradient(at 12% 0%, oklch(0.62 0.22 252 / 0.18) 0px, transparent 50%),
+      radial-gradient(at 88% 0%, oklch(0.74 0.18 220 / 0.12) 0px, transparent 55%),
+      radial-gradient(at 100% 100%, oklch(0.62 0.22 252 / 0.08) 0px, transparent 50%);
+  }
+
+  /* Hero card con shine */
+  .card-shine {
+    background: linear-gradient(135deg, oklch(0.18 0.04 248) 0%, oklch(0.22 0.10 252) 45%, oklch(0.28 0.16 240) 100%);
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+  }
+  .card-shine::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(115, 180, 255, 0.18), transparent 45%),
+      radial-gradient(circle at 100% 100%, rgba(86, 160, 240, 0.10), transparent 55%);
+    pointer-events: none;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Glow text */
+  .text-glow {
+    text-shadow: 0 0 24px oklch(0.62 0.22 252 / 0.5);
+  }
+
+  /* Animations */
+  .fade-in { animation: fadeIn 0.35s ease both; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .slide-up { animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .pop-in { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .delay-1 { animation-delay: 60ms; }
+  .delay-2 { animation-delay: 120ms; }
+  .delay-3 { animation-delay: 180ms; }
+  .delay-4 { animation-delay: 240ms; }
+
+  /* Hover lift en cards */
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    border-color: oklch(0.62 0.22 252 / 0.5);
+  }
+  .card-hover:active {
+    transform: scale(0.98);
+    transition-duration: 0.08s;
+  }
+
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+  /* Pulse glow para CTAs */
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 oklch(0.62 0.22 252 / 0.5); }
+    50%      { box-shadow: 0 0 0 12px oklch(0.62 0.22 252 / 0); }
+  }
+  .pulse-glow { animation: pulseGlow 2s infinite; }
+
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: oklch(0.32 0.04 248);
+    border-radius: 3px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
 }
